@@ -9,7 +9,7 @@
 <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
 
   {# Add the file upload field as you learnt for Flask-WTF #}
-     {% include 'flash_messages.html' %}
+
         {{ form.csrf_token }}
         <div class="form-group">
             {{ form.description.label }}

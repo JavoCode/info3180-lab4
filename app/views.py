@@ -34,7 +34,7 @@ def upload():
         abort(401)
 
     # Instantiate your form class
-    uploadForm = UploadForm
+    uploadForm = UploadForm()
 
     # Validate file upload on submit
     if request.method == 'POST' and uploadForm.validate_on_submit():
@@ -48,15 +48,16 @@ def upload():
         flash('File Saved', 'success')
         return redirect(url_for('home'))
 
-    return render_template('upload.html')
+    return render_template('upload.html', form=uploadForm)
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != app.config['ADMIN_USERNAME'] or request.form['password'] != app.config[
-            'ADMIN_PASSWORD']:
+        usernameNew = request.form['username']
+        usernameConfig = app.config['ADMIN_USERNAME']
+        if request.form['username'] != app.config['ADMIN_USERNAME'] or request.form['password'] != app.config['ADMIN_PASSWORD']:
             error = 'Invalid username or password'
         else:
             session['logged_in'] = True
