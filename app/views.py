@@ -8,6 +8,8 @@ import os
 from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.utils import secure_filename
+# import form from forms.py
+from .forms import UploadForm
 
 
 ###
@@ -47,11 +49,12 @@ def upload():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != app.config['ADMIN_USERNAME'] or request.form['password'] != app.config['ADMIN_PASSWORD']:
+        if request.form['username'] != app.config['ADMIN_USERNAME'] or request.form['password'] != app.config[
+            'ADMIN_PASSWORD']:
             error = 'Invalid username or password'
         else:
             session['logged_in'] = True
-            
+
             flash('You were logged in', 'success')
             return redirect(url_for('upload'))
     return render_template('login.html', error=error)
@@ -75,7 +78,8 @@ def flash_errors(form):
             flash(u"Error in the %s field - %s" % (
                 getattr(form, field).label.text,
                 error
-), 'danger')
+            ), 'danger')
+
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
