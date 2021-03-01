@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <h2>{{ description }}</h2>
+
+    {# Example usage of route for files not in static folder #}
+
+    <div class="parent">
+     {% for file in images %}
+        {% if file != '.gitkeep' %}
+            <div>
+            <img width="50%" src="{{ url_for('get_uploaded_file', filename=file) }}" />
+            </div>
+
+        {% endif %}
+    {% endfor %}
+    </div>
+
+
+
+{% endblock %}

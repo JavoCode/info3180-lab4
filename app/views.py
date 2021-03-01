@@ -6,7 +6,7 @@ This file creates your application.
 """
 import os
 from app import app
-from flask import render_template, request, redirect, url_for, flash, session, abort
+from flask import render_template, request, redirect, url_for, flash, session, abort, send_from_directory
 from werkzeug.utils import secure_filename
 # import form from forms.py
 from .forms import UploadForm
@@ -57,7 +57,8 @@ def login():
     if request.method == 'POST':
         usernameNew = request.form['username']
         usernameConfig = app.config['ADMIN_USERNAME']
-        if request.form['username'] != app.config['ADMIN_USERNAME'] or request.form['password'] != app.config['ADMIN_PASSWORD']:
+        if request.form['username'] != app.config['ADMIN_USERNAME'] or request.form['password'] != app.config[
+            'ADMIN_PASSWORD']:
             error = 'Invalid username or password'
         else:
             session['logged_in'] = True
@@ -110,6 +111,28 @@ def add_header(response):
 def page_not_found(error):
     """Custom 404 page."""
     return render_template('404.html'), 404
+
+
+@app.route("/uploads/<filename>")
+def get_uploaded_file(filename):
+    root_dir = os.getcwd()
+    tests = get_uploaded_images()
+    return send_from_directory(os.path.join(root_dir, app.config['UPLOAD_FOLDER']), filename)
+
+
+@app.route("/files")
+def files():
+    if not session.get('logged_in'):
+        abort(401)
+
+    return render_template('files.html', images=get_uploaded_images())
+
+
+def get_uploaded_images():
+    root_dir = os.getcwd()
+
+    for subdir, dirs, files in os.walk(root_dir + '/uploads/'):
+        return files
 
 
 if __name__ == '__main__':
